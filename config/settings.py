@@ -8,7 +8,7 @@ class Config:
     JWT_SECRET_KEY = os.getenv("JWT_SECRET_KEY", "dev-jwt-secret")
     SQLALCHEMY_DATABASE_URI = os.getenv("DATABASE_URL", "sqlite:///todo.db")
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    JWT_ACCESS_TOKEN_EXPIRES = 86400  # 1 day in seconds
+    JWT_ACCESS_TOKEN_EXPIRES = 365 * 24 * 60 * 60  # 1 year
 
     SWAGGER = {
         "title": "Todo & Reminder API",
