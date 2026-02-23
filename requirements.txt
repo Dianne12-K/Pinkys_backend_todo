@@ -6,7 +6,7 @@ flask-cors==4.0.1
 flasgger==0.9.7.1
 python-dotenv==1.0.1
 apscheduler==3.10.4
-psycopg2-binary==2.9.9
+psycopg[binary]==3.2.4
 marshmallow==3.21.3
 sendgrid==6.11.0
 twilio==9.3.3
