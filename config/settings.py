@@ -3,12 +3,18 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+
 class Config:
     SECRET_KEY = os.getenv("SECRET_KEY", "dev-secret")
     JWT_SECRET_KEY = os.getenv("JWT_SECRET_KEY", "dev-jwt-secret")
-    SQLALCHEMY_DATABASE_URI = os.getenv("DATABASE_URL", "sqlite:///todo.db")
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     JWT_ACCESS_TOKEN_EXPIRES = 365 * 24 * 60 * 60  # 1 year
+
+    # Force psycopg3 driver for Python 3.14 compatibility on Render
+    _db_url = os.getenv("DATABASE_URL", "sqlite:///todo.db")
+    if _db_url.startswith("postgresql://"):
+        _db_url = _db_url.replace("postgresql://", "postgresql+psycopg://", 1)
+    SQLALCHEMY_DATABASE_URI = _db_url
 
     SWAGGER = {
         "title": "Todo & Reminder API",
@@ -72,39 +78,39 @@ class Config:
                 "type": "object",
                 "required": ["title"],
                 "properties": {
-                    "title":          {"type": "string",  "example": "Submit project report"},
-                    "description":    {"type": "string",  "example": "Final report for Q1 2026"},
-                    "due_date":       {"type": "string",  "format": "date-time", "example": "2026-03-15T09:00:00"},
-                    "priority":       {"type": "string",  "enum": ["low", "medium", "high"], "example": "high"},
-                    "is_recurring":   {"type": "boolean", "example": False},
-                    "recurrence_rule":{"type": "string",  "enum": ["daily", "weekly", "monthly"], "example": "weekly"}
+                    "title":           {"type": "string",  "example": "Submit project report"},
+                    "description":     {"type": "string",  "example": "Final report for Q1 2026"},
+                    "due_date":        {"type": "string",  "format": "date-time", "example": "2026-03-15T09:00:00"},
+                    "priority":        {"type": "string",  "enum": ["low", "medium", "high"], "example": "high"},
+                    "is_recurring":    {"type": "boolean", "example": False},
+                    "recurrence_rule": {"type": "string",  "enum": ["daily", "weekly", "monthly"], "example": "weekly"}
                 }
             },
             "TaskUpdateRequest": {
                 "type": "object",
                 "properties": {
-                    "title":          {"type": "string",  "example": "Updated task title"},
-                    "description":    {"type": "string",  "example": "Updated description"},
-                    "due_date":       {"type": "string",  "format": "date-time", "example": "2026-04-01T10:00:00"},
-                    "priority":       {"type": "string",  "enum": ["low", "medium", "high"], "example": "low"},
-                    "status":         {"type": "string",  "enum": ["pending", "completed", "archived"], "example": "completed"},
-                    "is_recurring":   {"type": "boolean", "example": False},
-                    "recurrence_rule":{"type": "string",  "enum": ["daily", "weekly", "monthly"]}
+                    "title":           {"type": "string",  "example": "Updated task title"},
+                    "description":     {"type": "string",  "example": "Updated description"},
+                    "due_date":        {"type": "string",  "format": "date-time", "example": "2026-04-01T10:00:00"},
+                    "priority":        {"type": "string",  "enum": ["low", "medium", "high"], "example": "low"},
+                    "status":          {"type": "string",  "enum": ["pending", "completed", "archived"], "example": "completed"},
+                    "is_recurring":    {"type": "boolean", "example": False},
+                    "recurrence_rule": {"type": "string",  "enum": ["daily", "weekly", "monthly"]}
                 }
             },
             "TaskResponse": {
                 "type": "object",
                 "properties": {
-                    "id":             {"type": "integer", "example": 1},
-                    "title":          {"type": "string",  "example": "Submit project report"},
-                    "description":    {"type": "string",  "example": "Final report for Q1 2026"},
-                    "due_date":       {"type": "string",  "format": "date-time", "example": "2026-03-15T09:00:00"},
-                    "priority":       {"type": "string",  "example": "high"},
-                    "status":         {"type": "string",  "example": "pending"},
-                    "is_recurring":   {"type": "boolean", "example": False},
-                    "recurrence_rule":{"type": "string",  "example": None},
-                    "reminders":      {"type": "array", "items": {"$ref": "#/definitions/ReminderResponse"}},
-                    "created_at":     {"type": "string",  "example": "2026-02-21T10:00:00"}
+                    "id":              {"type": "integer", "example": 1},
+                    "title":           {"type": "string",  "example": "Submit project report"},
+                    "description":     {"type": "string",  "example": "Final report for Q1 2026"},
+                    "due_date":        {"type": "string",  "format": "date-time", "example": "2026-03-15T09:00:00"},
+                    "priority":        {"type": "string",  "example": "high"},
+                    "status":          {"type": "string",  "example": "pending"},
+                    "is_recurring":    {"type": "boolean", "example": False},
+                    "recurrence_rule": {"type": "string",  "example": None},
+                    "reminders":       {"type": "array", "items": {"$ref": "#/definitions/ReminderResponse"}},
+                    "created_at":      {"type": "string",  "example": "2026-02-21T10:00:00"}
                 }
             },
 
