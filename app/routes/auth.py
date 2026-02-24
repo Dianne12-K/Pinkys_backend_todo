@@ -54,7 +54,8 @@ def register():
     user = User(email=data["email"], username=data["username"], password_hash=hashed)
     db.session.add(user)
     db.session.commit()
-    token = create_access_token(identity=user.id)
+    token = create_access_token(identity=str(user.id))
+
     return success({"user": user.to_dict(), "token": token}, "Registered successfully", 201)
 
 
@@ -90,7 +91,7 @@ def login():
     user = User.query.filter_by(email=data.get("email")).first()
     if not user or not bcrypt.check_password_hash(user.password_hash, data.get("password", "")):
         return error("Invalid email or password", 401)
-    token = create_access_token(identity=user.id)
+    token = create_access_token(identity=str(user.id))
     return success({"user": user.to_dict(), "token": token}, "Login successful")
 
 
