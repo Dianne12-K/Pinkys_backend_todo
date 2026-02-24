@@ -12,7 +12,12 @@ def create_app():
     db.init_app(app)
     jwt.init_app(app)
     bcrypt.init_app(app)
-    cors.init_app(app, resources={r"/api/*": {"origins": "*"}})
+    cors.init_app(app,
+                  resources={r"/api/*": {"origins": "*"}},
+                  supports_credentials=True,
+                  allow_headers=["Content-Type", "Authorization"],
+                  methods=["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"]
+                  )
     swagger.init_app(app)
 
     # ── Register middleware hooks ───────────────────────────────────────────────
